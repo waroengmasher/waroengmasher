@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAROENG MASHER - waroeng masher adalah waarung kopi </title>
+    <title>WAROENG MASHER - wareong masher meiliki kualitas bagus</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -606,15 +606,15 @@
 
     <script>
         // --- INISIALISASI FIREBASE (TIDAK DIUBAH) ---
-const firebaseConfig = {
-  apiKey: "AIzaSyBhRCNri0TjBdMx9fEN8jgAfDD-jV_FdNo",
-  authDomain: "waroengmasher.firebaseapp.com",
-  projectId: "waroengmasher",
-  storageBucket: "waroengmasher.firebasestorage.app",
-  messagingSenderId: "984134106741",
-  appId: "1:984134106741:web:81d129033d09475173c23c",
-  measurementId: "G-7RRW43T1LT"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhRCNri0TjBdMx9fEN8jgAfDD-jV_FdNo",
+            authDomain: "waroengmasher.firebaseapp.com",
+            projectId: "waroengmasher",
+            storageBucket: "waroengmasher.firebasestorage.app",
+            messagingSenderId: "984134106741",
+            appId: "1:984134106741:web:81d129033d09475173c23c",
+            measurementId: "G-7RRW43T1LT"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -918,35 +918,80 @@ const firebaseConfig = {
             };
         }
 
-        function sendOrderConfirmation(method, total) {
-            let message = `Halo Admin Waroeng Masher!%0A%0ASaya *${visitorName}* ingin mengkonfirmasi pesanan.%0A%0A*DETAIL PESANAN:*%0A`;
-            
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name} (${item.quantity}x) - Rp ${(item.price * item.quantity).toLocaleString('id-ID')}%0A`;
-            });
+        // 
+        // --- KODE BARU DIMASUKKAN DI SINI ---
+        //
+        async function sendOrderConfirmation(method, total) {
+            // 0. Tampilkan status loading pada tombol
+            confirmPaymentWaBtn.disabled = true;
+            confirmPaymentWaBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Menyimpan Pesanan...
+            `;
 
-            message += `%0A*Total:* Rp ${total.toLocaleString('id-ID')}%0A`;
-            message += `*Metode Pembayaran:* ${method}%0A%0A`;
+            try {
+                // 1. Siapkan data untuk disimpan ke Firebase
+                // Ini PENTING agar sesuai dengan panel admin
+                const orderData = {
+                    visitorName: visitorName || 'Pelanggan',
+                    items: cart, // Ini sudah array (penting!)
+                    total: total, // Ini sudah number (penting!)
+                    method: method, // Ini string (e.g., 'QRIS')
+                    date: firebase.firestore.FieldValue.serverTimestamp(), // Ini timestamp (penting!)
+                    status: "pending" // Tambahan status
+                };
 
-            if (method === 'Bayar di Kasir') {
-                message += `Pesanan ini akan *dibayar tunai di kasir*.%0A%0ATolong siapkan pesanan saya! Terima kasih.`;
-            } else {
-                message += `Saya sudah melakukan pembayaran sebesar *Rp ${total.toLocaleString('id-ID')}* melalui *${method}*.%0A%0AMohon konfirmasi pesanan saya. Terima kasih.`;
+                // 2. Simpan ke Firebase dan dapatkan ID-nya
+                // Note: Ini akan OTOMATIS membuat ID Pesanan
+                const docRef = await db.collection('orders').add(orderData);
+                const orderId = docRef.id.substring(0, 6).toUpperCase(); // Ambil 6 digit ID, e.g., "A8F3D1"
+
+                // 3. Buat pesan WhatsApp, SEKARANG DENGAN ID
+                let message = `Halo Admin Waroeng Masher!%0A%0ASaya *${visitorName}* ingin mengkonfirmasi pesanan.%0A%0A`;
+                message += `*ID PESANAN: #${orderId}*%0A%0A`; // <-- ID DITAMBAHKAN DI SINI
+                message += `*DETAIL PESANAN:*%0A`;
+                
+                cart.forEach((item, index) => {
+                    message += `${index + 1}. ${item.name} (${item.quantity}x) - Rp ${(item.price * item.quantity).toLocaleString('id-ID')}%0A`;
+                });
+
+                message += `%0A*Total:* Rp ${total.toLocaleString('id-ID')}%0A`;
+                message += `*Metode Pembayaran:* ${method}%0A%0A`;
+
+                if (method === 'Bayar di Kasir') {
+                    message += `Pesanan ini akan *dibayar tunai di kasir*.%0A%0ATolong siapkan pesanan saya! Terima kasih.`;
+                } else {
+                    message += `Saya sudah melakukan pembayaran sebesar *Rp ${total.toLocaleString('id-ID')}* melalui *${method}*.%0A%0AMohon konfirmasi pesanan saya. Terima kasih.`;
+                }
+
+                // 4. Buka link WhatsApp
+                const waLink = `https://wa.me/${WA_NUMBER}?text=${message}`;
+                window.open(waLink, '_blank');
+
+                // 5. Kosongkan keranjang SETELAH berhasil
+                cart = [];
+                saveCart();
+                updateCartUI();
+                
+                // Tutup modal pembayaran
+                paymentModal.hide();
+
+            } catch (error) {
+                console.error("Error saving order to Firebase: ", error);
+                alert("Gagal menyimpan pesanan. Silakan coba lagi.\n\nError: " + error.message);
+            } finally {
+                // 6. Kembalikan tombol ke keadaan normal
+                confirmPaymentWaBtn.disabled = false;
+                confirmPaymentWaBtn.innerHTML = `
+                    <i class="bi bi-whatsapp"></i> Konfirmasi Pesanan ke Admin
+                `;
             }
-
-            const waLink = `https://wa.me/${WA_NUMBER}?text=${message}`;
-            window.open(waLink, '_blank');
-
-            // Kosongkan keranjang setelah konfirmasi
-            cart = [];
-            saveCart();
-            updateCartUI();
-            
-            // Tutup modal pembayaran
-            paymentModal.hide();
         }
+        //
+        // --- AKHIR DARI KODE YANG BARU ---
+        //
 
-// --- LOGIKA CHAT LIVE (Firebase) DITAMBAHKAN DI SINI ---
+        // --- LOGIKA CHAT LIVE (Firebase) DITAMBAHKAN DI SINI ---
         const chatFab = document.getElementById('chat-fab-button');
         const chatWindow = document.getElementById('chat-window');
         const chatCloseBtn = document.getElementById('chat-close-btn');
@@ -1151,5 +1196,4 @@ const firebaseConfig = {
         });
     </script>
 </body>
-
 </html>
