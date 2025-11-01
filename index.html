@@ -347,37 +347,6 @@
             color: #B0B0B0;
         } 
 
-        /* --- DEVELOPER MODE STYLING --- */
-        .developer-analysis-bg {
-            /* Menggunakan latar belakang gelap untuk membedakannya */
-            background-color: #343a40 !important; 
-            border-top: 5px solid #ffc107; /* Garis kuning sebagai penanda developer */
-            color: white;
-            box-shadow: 0 -4px 15px rgba(255, 193, 7, 0.2);
-        }
-
-        #financial-analysis-section {
-            padding: 30px 0;
-        }
-
-        #financial-analysis-container h4 {
-            margin-bottom: 15px;
-            font-weight: 600;
-            border-bottom: 1px dashed #6c757d;
-            padding-bottom: 5px;
-        }
-
-        #financial-analysis-container ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        #financial-analysis-container li {
-            padding: 5px 0;
-            font-size: 1.1rem;
-        }
-        /* --- AKHIR DEVELOPER MODE STYLING --- */
-
         /* --- ANIMASI LUCU --- */
 
         /* Animasi Pop untuk Tombol */
@@ -425,6 +394,16 @@
         }
         .chat-fab:hover {
             transform: translateY(-5px); /* Sedikit naik saat hover */
+        }
+
+
+        /* Animasi Spin untuk Tombol Kirim Chat (opsional, jika ingin lebih interaktif) */
+        @keyframes spinSend {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .chat-input button.animate-spin i {
+            animation: spinSend 0.4s ease-out;
         }
 
         /* Animasi modal pembayaran */
@@ -513,8 +492,7 @@
 
         <h3 class="text-center mb-4 pt-3 text-white">🍽️ Makanan dan Camilan</h3>
         <div class="product-shelf">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="food-list-container">
-                </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="food-list-container"></div>
         </div>
     </div>
 </main>
@@ -589,14 +567,6 @@
     <div id="toast-container"></div>
     <div id="product-details-container"></div> 
 
-    <section id="financial-analysis-section" class="p-4 mt-5 developer-analysis-bg" style="display: none;">
-        <div class="container">
-            <div id="financial-analysis-container">
-                <h4 class="text-warning">💰 Analisis Keuangan Developer 📊 (Loading...)</h4>
-                <p class="text-light">Menghubungkan ke data pesanan...</p>
-            </div>
-        </div>
-    </section>
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
             <p class="mb-0">&copy; 2025 WAROENG MASHER | Dibuat dengan Passion dan Kopi</p>
@@ -635,7 +605,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // --- INISIALISASI FIREBASE ---
+        // --- INISIALISASI FIREBASE (TIDAK DIUBAH) ---
 const firebaseConfig = {
   apiKey: "AIzaSyBhRCNri0TjBdMx9fEN8jgAfDD-jV_FdNo",
   authDomain: "waroengmasher.firebaseapp.com",
@@ -648,13 +618,7 @@ const firebaseConfig = {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --------------------------------------------------------------------
-        // 🔒 PENGATURAN MODE PENGEMBANG (DEVELOPER MODE)
-        // GANTI ini menjadi 'true' agar elemen Analisis Keuangan muncul.
-        const IS_DEVELOPER_MODE = true; // <-- UBAH KE TRUE UNTUK MELIHAT DATA ANALISIS
-        // --------------------------------------------------------------------
-        
-        // --- DATA PRODUK ---
+        // --- DATA PRODUK (TIDAK DIUBAH) ---
         const products = [
             { id: 'INDONESIANO HOT', name: 'INDONESIANO HOT', price: 10000, image: 'sasya.jpg', description: 'Kopi hitam klasik Indonesia disajikan hangat dengan rasa otentik.', category: 'minuman' },
             { id: 'LONGBLACK HOT', name: 'LONGBLACK HOT', price: 10000, image: 'sasya.jpg ', description: 'Espresso ganda yang diekstraksi ke dalam air panas, kuat dan menyegarkan.', category: 'minuman' },
@@ -728,370 +692,462 @@ const firebaseConfig = {
             }, 3000); 
         }
 
-        function addToCart(productId) {
+        function addToCart(productId, productName) {
             const existingItemIndex = cart.findIndex(item => item.id === productId);
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
             if (existingItemIndex > -1) {
                 cart[existingItemIndex].quantity += 1;
             } else {
-                cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image });
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
+                }
             }
             saveCart();
-            updateCartBadge();
-            renderCart();
-            showToast(product.name);
+            updateCartUI(); 
+            showToast(productName); 
+            
+            // --- Tambahan: Animasi goyang pada ikon keranjang ---
+            const cartIcon = document.querySelector('.cart-icon');
+            cartIcon.classList.remove('animate-shake'); // Hapus dulu jika ada
+            void cartIcon.offsetWidth; // Force reflow/re-render
+            cartIcon.classList.add('animate-shake');
+            setTimeout(() => cartIcon.classList.remove('animate-shake'), 600);
+            // --- Akhir Tambahan ---
         }
 
-        function formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            updateCartUI();
         }
         
-        function updateQuantity(productId, change) {
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            if (itemIndex > -1) {
-                cart[itemIndex].quantity += change;
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1); // Hapus jika kuantitas 0
+        function changeQuantity(productId, newQuantity) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    item.quantity = newQuantity;
+                    saveCart();
+                    updateCartUI();
                 }
-                saveCart();
-                renderCart();
-                updateCartBadge();
             }
         }
-        
-        function renderCart() {
-            cartItemsContainer.innerHTML = '';
-            let total = calculateTotal();
 
+        function updateCartUI() {
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p class="text-center text-muted">Keranjang Anda masih kosong.</p>';
-                cartTotalElement.textContent = formatRupiah(0);
+                cartTotalElement.textContent = 'Rp 0';
+                updateCartBadge();
                 return;
             }
-
-            cart.forEach(item => {
-                const itemHtml = `
-                    <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
-                        <img src="${item.image}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+            let total = calculateTotal();
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                return `
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom cart-item" data-product-id="${item.id}">
+                        <img src="${item.image}" alt="${item.name}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;" class="me-3">
                         <div class="flex-grow-1">
                             <h6 class="mb-0 text-white">${item.name}</h6>
-                            <small class="text-muted">${formatRupiah(item.price)}</small>
+                            <p class="mb-1 text-muted small">Rp ${item.price.toLocaleString('id-ID')}</p>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <button class="btn btn-sm btn-outline-danger me-2" onclick="updateQuantity('${item.id}', -1)">-</button>
-                            <span class="text-white fw-bold me-2">${item.quantity}</span>
-                            <button class="btn btn-sm btn-outline-success" onclick="updateQuantity('${item.id}', 1)">+</button>
+                        <div class="d-flex align-items-center me-3">
+                             <button class="btn btn-sm btn-outline-secondary btn-qty-change text-white border-secondary" data-id="${item.id}" data-action="decrease">-</button>
+                             <input type="number" class="form-control form-control-sm mx-1 text-center cart-qty-input bg-dark text-white border-secondary" 
+                                    value="${item.quantity}" min="1" style="width: 50px;" data-id="${item.id}" readonly>
+                             <button class="btn btn-sm btn-outline-secondary btn-qty-change text-white border-secondary" data-id="${item.id}" data-action="increase">+</button>
                         </div>
-                        <span class="ms-4 fw-bold text-white" style="min-width: 80px; text-align: right;">${formatRupiah(item.price * item.quantity)}</span>
-                    </div>
-                `;
-                cartItemsContainer.innerHTML += itemHtml;
-            });
-
-            cartTotalElement.textContent = formatRupiah(total);
-        }
-
-        // --- LOGIKA TAMPILAN PRODUK ---
-
-        function renderProducts() {
-            const drinkContainer = document.getElementById('drink-list-container');
-            const foodContainer = document.getElementById('food-list-container');
-            drinkContainer.innerHTML = '';
-            foodContainer.innerHTML = '';
-
-            products.forEach(product => {
-                const cardHtml = `
-                    <div class="col">
-                        <div class="card product-card h-100">
-                            <img src="${product.image}" class="card-img-top" alt="${product.name}">
-                            <div class="card-body">
-                                <h5 class="card-title">${product.name}</h5>
-                                <p class="card-text">${product.description}</p>
-                                <h6>${formatRupiah(product.price)}</h6>
-                                <button class="btn btn-outline-primary w-100 mt-2" onclick="addToCart('${product.id}')">
-                                    <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
-                                </button>
-                            </div>
+                        <div class="text-end" style="min-width: 100px;">
+                            <h6 class="mb-1 text-success">Rp ${itemTotal.toLocaleString('id-ID')}</h6>
+                            <button class="btn btn-sm btn-outline-danger remove-from-cart-btn" data-product-id="${item.id}">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
                         </div>
                     </div>
                 `;
-                if (product.category === 'minuman') {
-                    drinkContainer.innerHTML += cardHtml;
-                } else if (product.category === 'makanan') {
-                    foodContainer.innerHTML += cardHtml;
-                }
+            }).join('');
+            cartTotalElement.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            updateCartBadge();
+            document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.productId;
+                    removeFromCart(productId);
+                });
             });
+             document.querySelectorAll('.btn-qty-change').forEach(button => {
+                 button.addEventListener('click', (e) => {
+                     const productId = e.currentTarget.dataset.id;
+                     const action = e.currentTarget.dataset.action;
+                     const item = cart.find(i => i.id === productId);
+                     if (!item) return;
+                     let newQuantity = item.quantity;
+                     if (action === 'increase') newQuantity += 1;
+                     else if (action === 'decrease') newQuantity -= 1;
+                     changeQuantity(productId, newQuantity);
+                 });
+             });
         }
         
-        // --- LOGIKA CHECKOUT DAN WHATSAPP ---
+        function renderProducts() {
+            const foodContainer = document.getElementById('food-list-container');
+            const drinkContainer = document.getElementById('drink-list-container');
+            if (!foodContainer || !drinkContainer) return;
+            const foods = products.filter(p => p.category === 'makanan');
+            const drinks = products.filter(p => p.category === 'minuman');
+            
+            const createProductCard = (product) => {
+                return `
+                <div class="col">
+                    <div class="card product-card h-100 d-flex flex-column"> 
+                        <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text">${product.description || 'Deskripsi segera hadir.'}</p>
+                            <h6 class="mb-3 mt-auto">Rp ${product.price.toLocaleString('id-ID')}</h6>
+                            <button class="btn btn-outline-primary add-to-cart-btn" data-product-id="${product.id}" data-product-name="${product.name}">
+                                <i class="bi bi-bag-fill"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            };
+            foodContainer.innerHTML = foods.map(createProductCard).join('');
+            drinkContainer.innerHTML = drinks.map(createProductCard).join('');
+            
+            // Listener untuk tombol Add to Cart
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.productId;
+                    const productName = e.currentTarget.dataset.productName;
+                    
+                    // --- Tambahan: Pemicu animasi pop pada tombol beli ---
+                    e.currentTarget.classList.remove('animate-pop');
+                    void e.currentTarget.offsetWidth;
+                    e.currentTarget.classList.add('animate-pop');
+                    setTimeout(() => e.currentTarget.classList.remove('animate-pop'), 200);
+                    // --- Akhir Tambahan ---
+                    
+                    addToCart(productId, productName);
+                });
+            });
+        }
 
+        // --- LOGIKA CHECKOUT DITAMBAHKAN DI SINI ---
         const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
         const paymentDetailsContent = document.getElementById('payment-details-content');
-        const confirmPaymentWABtn = document.getElementById('confirm-payment-wa-btn');
+        const confirmPaymentWaBtn = document.getElementById('confirm-payment-wa-btn');
+        let selectedPaymentMethod = 'QRIS'; // Default
+        let currentOrderTotal = 0;
+        let visitorName = localStorage.getItem('waroengMasherVisitorName') || 'Pelanggan';
 
-        checkoutBtn.addEventListener('click', () => {
-            const total = calculateTotal();
-            if (total === 0) return;
-
-            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            let paymentDetailsHtml = '';
-            let waMessage = `Halo Admin Waroeng Masher, saya ingin memesan menu ini:\n\n`;
-
-            cart.forEach(item => {
-                waMessage += `${item.quantity}x ${item.name} (${formatRupiah(item.price * item.quantity)})\n`;
+        // Event listener untuk perubahan metode pembayaran
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                selectedPaymentMethod = e.target.value;
             });
+        });
 
-            waMessage += `\nTotal Belanja: ${formatRupiah(total)}\nMetode Pembayaran: *${selectedMethod}*\n\n`;
-            waMessage += 'Mohon diproses segera. Terima kasih!';
-            
-            confirmPaymentWABtn.onclick = async () => {
-                // Simpan pesanan ke Firebase sebelum kirim WA
-                try {
-                    await db.collection('orders').add({
-                        items: cart,
-                        total: total,
-                        method: selectedMethod,
-                        date: new Date().toISOString(),
-                        status: 'Pending'
-                    });
-                    console.log("Pesanan berhasil disimpan di Firebase.");
-                } catch (e) {
-                    console.error("Error menambahkan dokumen order: ", e);
-                }
+        // Event listener untuk tombol Lanjutkan Pembayaran (di modal Keranjang)
+        checkoutBtn.addEventListener('click', (e) => {
+            // --- Tambahan: Pemicu animasi pop pada tombol checkout ---
+            e.currentTarget.classList.remove('animate-pop');
+            void e.currentTarget.offsetWidth;
+            e.currentTarget.classList.add('animate-pop');
+            setTimeout(() => e.currentTarget.classList.remove('animate-pop'), 200);
+            // --- Akhir Tambahan ---
 
-                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMessage)}`, '_blank');
-                
-                // Kosongkan keranjang setelah konfirmasi dikirim
-                cart = [];
-                saveCart();
-                renderCart();
-                updateCartBadge();
-                paymentModal.hide();
-            };
+            if (cart.length === 0) return;
 
-            // Menampilkan detail pembayaran di modal
-            if (selectedMethod === 'QRIS') {
-                paymentDetailsHtml = `
-                    <img src="qris.png" alt="QRIS Code" class="img-fluid">
-                    <p class="text-white">Scan QR Code di atas untuk pembayaran.</p>
-                    <div class="bank-info mt-3">
-                        <p>Total Bayar: <strong>${formatRupiah(total)}</strong></p>
-                        <p class="small">Pastikan jumlah yang ditransfer sesuai.</p>
-                    </div>
-                `;
-            } else if (selectedMethod === 'Transfer Bank') {
-                paymentDetailsHtml = `
-                    <h4>Transfer Bank</h4>
-                    <div class="bank-info mt-3">
-                        <p>Bank Tujuan: <strong>BCA</strong></p>
-                        <p>No. Rekening: <strong>1234567890</strong></p>
-                        <p>Atas Nama: <strong>Admin Waroeng Masher</strong></p>
-                        <p>Total Bayar: <strong>${formatRupiah(total)}</strong></p>
-                    </div>
-                    <p class="text-white mt-3">Setelah transfer, kirim bukti bayar melalui WhatsApp.</p>
-                `;
-            } else if (selectedMethod === 'Bayar di Kasir') {
-                paymentDetailsHtml = `
-                    <h4>Bayar di Kasir</h4>
-                    <p class="text-white">Anda akan membayar secara tunai (cash) di kasir kami saat mengambil pesanan.</p>
-                    <div class="bank-info mt-3">
-                        <p>Total Tagihan: <strong>${formatRupiah(total)}</strong></p>
-                    </div>
-                `;
-            }
+            currentOrderTotal = calculateTotal();
 
-            paymentDetailsContent.innerHTML = paymentDetailsHtml;
-            // Tutup Cart Modal sebelum membuka Payment Modal
+            // Sembunyikan Modal Keranjang
             const cartModalEl = document.getElementById('cartModal');
-            const cartModal = bootstrap.Modal.getInstance(cartModalEl);
-            if (cartModal) cartModal.hide();
-            
+            const cartBSModal = bootstrap.Modal.getInstance(cartModalEl) || new bootstrap.Modal(cartModalEl);
+            cartBSModal.hide();
+
+            // Tampilkan Modal Pembayaran
+            displayPaymentDetails(selectedPaymentMethod, currentOrderTotal);
             paymentModal.show();
         });
 
+        function displayPaymentDetails(method, total) {
+            let contentHTML = `
+                <h4>Total Pembayaran: <span class="fw-bold text-success">Rp ${total.toLocaleString('id-ID')}</span></h4>
+                <p class="text-muted">Metode Pembayaran: ${method}</p>
+                <hr class="text-muted">
+            `;
+            
+            switch (method) {
+                case 'QRIS':
+                    contentHTML += `
+                        <p class="lead">Scan kode QRIS di bawah ini:</p>
+                        <img src="https://i.ibb.co/6y420S4/qris-dummy.png" alt="QRIS Code Dummy" class="my-3 border p-2">
+                        <p class="small text-danger">Pastikan Anda mentransfer sesuai jumlah total (Rp ${total.toLocaleString('id-ID')})</p>
+                    `;
+                    break;
+                case 'Transfer Bank':
+                    contentHTML += `
+                        <p class="lead">Lakukan transfer ke rekening berikut:</p>
+                        <div class="bank-info bg-light mx-auto">
+                            <p class="fw-bold">BANK MASHER (BMR)</p>
+                            <p><strong>No. Rekening:</strong> 1234 5678 9012 3456</p>
+                            <p><strong>Atas Nama:</strong> Waroeng Masher Official</p>
+                        </div>
+                        <p class="small mt-3 text-danger">Pastikan Anda mentransfer sesuai jumlah total (Rp ${total.toLocaleString('id-ID')})</p>
+                    `;
+                    break;
+                case 'Bayar di Kasir':
+                    contentHTML += `
+                        <p class="lead">Anda telah memilih **Bayar di Kasir**.</p>
+                        <p>Silakan tunjukkan konfirmasi pesanan ini kepada staf kami saat mengambil pesanan Anda.</p>
+                    `;
+                    break;
+            }
 
-        // --- LOGIKA CHAT LIVE & BALASAN OTOMATIS ---
+            paymentDetailsContent.innerHTML = contentHTML;
+            
+            // Atur event listener untuk tombol Konfirmasi Pembayaran/Pesanan
+            confirmPaymentWaBtn.onclick = (e) => {
+                // Pemicu animasi pop pada tombol konfirmasi WA
+                e.currentTarget.classList.remove('animate-pop');
+                void e.currentTarget.offsetWidth;
+                e.currentTarget.classList.add('animate-pop');
+                setTimeout(() => e.currentTarget.classList.remove('animate-pop'), 200);
 
-        let visitorName = localStorage.getItem('visitorName');
+                sendOrderConfirmation(method, total);
+            };
+        }
+
+        function sendOrderConfirmation(method, total) {
+            let message = `Halo Admin Waroeng Masher!%0A%0ASaya *${visitorName}* ingin mengkonfirmasi pesanan.%0A%0A*DETAIL PESANAN:*%0A`;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} (${item.quantity}x) - Rp ${(item.price * item.quantity).toLocaleString('id-ID')}%0A`;
+            });
+
+            message += `%0A*Total:* Rp ${total.toLocaleString('id-ID')}%0A`;
+            message += `*Metode Pembayaran:* ${method}%0A%0A`;
+
+            if (method === 'Bayar di Kasir') {
+                message += `Pesanan ini akan *dibayar tunai di kasir*.%0A%0ATolong siapkan pesanan saya! Terima kasih.`;
+            } else {
+                message += `Saya sudah melakukan pembayaran sebesar *Rp ${total.toLocaleString('id-ID')}* melalui *${method}*.%0A%0AMohon konfirmasi pesanan saya. Terima kasih.`;
+            }
+
+            const waLink = `https://wa.me/${WA_NUMBER}?text=${message}`;
+            window.open(waLink, '_blank');
+
+            // Kosongkan keranjang setelah konfirmasi
+            cart = [];
+            saveCart();
+            updateCartUI();
+            
+            // Tutup modal pembayaran
+            paymentModal.hide();
+        }
+
+// --- LOGIKA CHAT LIVE (Firebase) DITAMBAHKAN DI SINI ---
         const chatFab = document.getElementById('chat-fab-button');
         const chatWindow = document.getElementById('chat-window');
         const chatCloseBtn = document.getElementById('chat-close-btn');
-        const nameModalOverlay = document.getElementById('name-modal');
-        const nameForm = document.getElementById('name-form');
-        const visitorNameInput = document.getElementById('visitor-name-input');
         const chatMessagesContainer = document.getElementById('chat-messages-container');
         const chatForm = document.getElementById('chat-form');
         const chatMessageInput = document.getElementById('chat-message-input');
-
-        // Balasan Otomatis
-        const autoResponses = [
-            { trigger: 'halo', response: 'Halo! Ada yang bisa saya bantu di Waroeng Masher hari ini? Silakan ketik *menu* untuk melihat opsi utama.' },
-            { trigger: 'menu', response: 'Tentu, ini menu utama kami: 1. *Minuman* (Kopi/Teh), 2. *Makanan* (Camilan/Nasi). Anda tertarik yang mana? Atau, lihat menu lengkap di website!' },
-            { trigger: 'alamat', response: 'Kami berlokasi di Jl. Kopi Nikmat No. 12, dekat perempatan. Anda bisa mencari "Waroeng Masher" di Google Maps!' },
-            { trigger: 'terima kasih', response: 'Sama-sama! Senang bisa membantu. Selamat menikmati hari Anda!' },
-            { trigger: 'jam buka', response: 'Kami buka setiap hari mulai pukul 10:00 pagi hingga 11:00 malam.' },
-            { trigger: 'promo', response: 'Saat ini kami memiliki promo Beli 2 Kopi Gratis 1 Roti Bakar. Cepat pesan sekarang!' },
-        ];
-        const defaultResponse = "Maaf, saya adalah Balasan Otomatis. Mohon ketik *menu* atau *alamat*. Jika Anda perlu bantuan lebih lanjut, admin kami akan segera merespon.";
-
-        function formatMessage(sender, message) {
-            const wrapper = document.createElement('div');
-            wrapper.classList.add('message-content-wrapper');
-            
-            const nameElement = document.createElement('div');
-            nameElement.classList.add('message-sender-name');
-            nameElement.textContent = sender === 'user' ? (visitorName || 'Anda') : 'Admin';
-            
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', sender);
-            messageElement.textContent = message;
-
-            if (sender === 'user') {
-                 wrapper.style.marginLeft = 'auto'; 
-                 wrapper.style.marginRight = '0';
-            } else {
-                 wrapper.style.marginLeft = '0'; 
-                 wrapper.style.marginRight = 'auto';
-            }
-            
-            wrapper.appendChild(nameElement);
-            wrapper.appendChild(messageElement);
-            chatMessagesContainer.appendChild(wrapper);
-
-            // Scroll ke bawah
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        const nameModalOverlay = document.getElementById('name-modal');
+        const nameForm = document.getElementById('name-form');
+        const visitorNameInput = document.getElementById('visitor-name-input');
+        let chatId = localStorage.getItem('waroengMasherChatId');
+        
+        // Cek Nama Pengunjung saat memuat
+        if (visitorName !== 'Pelanggan') {
+            document.querySelector('#name-modal .name-modal-content h5').textContent = `Selamat Datang Kembali, ${visitorName}!`;
+        } else {
+            visitorNameInput.value = ''; // Pastikan kosong jika nama belum ada
         }
-
-        function handleAutoResponse(userMessage) {
-            const lowerCaseMessage = userMessage.toLowerCase().trim();
-            
-            // Cari balasan otomatis
-            const foundResponse = autoResponses.find(res => lowerCaseMessage.includes(res.trigger));
-            const responseText = foundResponse ? foundResponse.response : defaultResponse;
-
-            // Beri jeda simulasi Admin mengetik
-            setTimeout(() => {
-                formatMessage('admin', responseText);
-            }, 1000); 
-        }
-
-
-        // Event Listener untuk tombol FAB
-        chatFab.addEventListener('click', () => {
-            if (!visitorName) {
-                // Tampilkan modal nama jika belum ada nama
-                nameModalOverlay.classList.add('open');
-            } else {
-                // Buka jendela chat jika sudah ada nama
-                chatWindow.classList.add('open');
-                chatFab.style.display = 'none';
-                
-                // Kirim pesan selamat datang pertama kali (jika belum pernah)
-                if (chatMessagesContainer.children.length === 0) {
-                     formatMessage('admin', `Selamat datang, ${visitorName}! Ada yang bisa dibantu? Silakan ketik *menu* atau *alamat*.`);
+        
+        // 1. Logika Pengambilan Nama
+        nameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const inputName = visitorNameInput.value.trim();
+            if (inputName) {
+                visitorName = inputName;
+                localStorage.setItem('waroengMasherVisitorName', visitorName);
+                nameModalOverlay.classList.remove('open');
+                if (chatId) {
+                    // Jika chat ID sudah ada, buka chat window langsung
+                    openChatWindow();
+                } else {
+                    // Jika belum ada chat ID, buat chat baru
+                    initializeChatSession();
                 }
             }
         });
 
-        // Event Listener untuk form input nama
-        nameForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            visitorName = visitorNameInput.value.trim();
-            if (visitorName) {
-                localStorage.setItem('visitorName', visitorName);
-                nameModalOverlay.classList.remove('open');
-                chatWindow.classList.add('open');
-                chatFab.style.display = 'none';
-                
-                // Kirim pesan selamat datang pertama kali
-                formatMessage('admin', `Selamat datang, ${visitorName}! Ada yang bisa dibantu? Silakan ketik *menu* atau *alamat*.`);
+        // 2. Logika FAB dan Tombol Tutup
+        chatFab.addEventListener('click', () => {
+            // Pemicu animasi pop pada tombol FAB
+            chatFab.classList.remove('animate-pop'); 
+            void chatFab.offsetWidth;
+            chatFab.classList.add('animate-pop');
+            setTimeout(() => chatFab.classList.remove('animate-pop'), 200);
+
+            if (!visitorName || visitorName === 'Pelanggan') {
+                nameModalOverlay.classList.add('open');
+            } else {
+                openChatWindow();
             }
         });
 
-        // Event Listener untuk tombol tutup chat
         chatCloseBtn.addEventListener('click', () => {
             chatWindow.classList.remove('open');
-            chatFab.style.display = 'flex';
+            chatFab.style.display = 'flex'; 
         });
 
-        // Event Listener untuk form input pesan
+        function openChatWindow() {
+            chatWindow.classList.add('open');
+            chatFab.style.display = 'none';
+            // Pastikan session aktif atau buat baru
+            if (!chatId) {
+                initializeChatSession();
+            } else {
+                loadMessages();
+            }
+        }
+        
+        function initializeChatSession() {
+            // Cek apakah ada chat ID yang tersimpan di localStorage
+            if (chatId) {
+                loadMessages(); // Muat chat yang sudah ada
+                return;
+            }
+
+            // Buat dokumen chat baru di Firestore
+            db.collection("chats").add({
+                visitorName: visitorName,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessage: 'Halo, saya butuh bantuan.',
+                status: 'open',
+                messages: []
+            }).then((docRef) => {
+                chatId = docRef.id;
+                localStorage.setItem('waroengMasherChatId', chatId);
+                sendInitialMessage();
+                loadMessages(); 
+            }).catch((error) => {
+                console.error("Error creating chat: ", error);
+                alert("Gagal memulai sesi chat. Coba lagi.");
+            });
+        }
+        
+        function sendInitialMessage() {
+            // Kirim pesan pembuka ke admin (dianggap dari user)
+            sendMessageToFirestore("Halo Admin, saya *membutuhkan bantuan* terkait menu/pesanan.", 'user');
+        }
+
+        function sendMessageToFirestore(text, senderType) {
+            if (!chatId) return;
+
+            const newMessage = {
+                text: text,
+                sender: senderType, // 'user' atau 'admin'
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            db.collection("chats").doc(chatId).update({
+                messages: firebase.firestore.FieldValue.arrayUnion(newMessage),
+                lastMessage: text,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch((error) => {
+                console.error("Error updating document: ", error);
+            });
+        }
+        
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const message = chatMessageInput.value.trim();
-
-            if (message) {
-                formatMessage('user', message);
-                handleAutoResponse(message);
+            const messageText = chatMessageInput.value.trim();
+            if (messageText && chatId) {
+                sendMessageToFirestore(messageText, 'user');
                 chatMessageInput.value = '';
             }
         });
 
-        // --- FUNGSI ANALISIS KEUANGAN DEVELOPER ---
-
-        async function loadFinancialAnalysis() {
-            const analysisSection = document.getElementById('financial-analysis-section');
-            const analysisContainer = document.getElementById('financial-analysis-container');
+        function renderMessage(message) {
+            const senderName = message.sender === 'user' ? visitorName : 'Admin';
+            const messageClass = message.sender === 'user' ? 'user' : 'admin';
             
-            if (!IS_DEVELOPER_MODE) {
-                // Pastikan section tersembunyi jika mode off
-                analysisSection.style.display = 'none';
-                return;
-            }
-            
-            // Tampilkan section jika Developer Mode ON
-            analysisSection.style.display = 'block'; 
+            const div = document.createElement('div');
+            div.classList.add('message-content-wrapper');
 
-            try {
-                const ordersRef = db.collection('orders');
-                const snapshot = await ordersRef.get();
-                
-                let totalRevenue = 0;
-                let totalOrders = 0;
-                let totalItemsSold = 0;
-                
-                snapshot.forEach(doc => {
-                    const order = doc.data();
-                    // Pastikan total adalah angka
-                    totalRevenue += (typeof order.total === 'number' ? order.total : 0);
-                    totalOrders++;
-                    
-                    // Hitung total item terjual dari detail keranjang (items array)
-                    if (order.items && Array.isArray(order.items)) {
-                        order.items.forEach(item => {
-                            totalItemsSold += (typeof item.quantity === 'number' ? item.quantity : 0);
-                        });
+            div.innerHTML = `
+                <span class="message-sender-name">${senderName}</span>
+                <div class="message ${messageClass}">${message.text.replace(/\*(.*?)\*/g, '<b>$1</b>')}</div>
+            `;
+            chatMessagesContainer.appendChild(div);
+        }
+
+        function scrollToBottom() {
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        function loadMessages() {
+            if (!chatId) return;
+            
+            // Menggunakan onSnapshot untuk mendapatkan pembaruan real-time
+            db.collection("chats").doc(chatId)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        chatMessagesContainer.innerHTML = ''; // Kosongkan sebelum mengisi
+                        
+                        if (data.messages && data.messages.length > 0) {
+                            // Sortir berdasarkan timestamp (jika ada) atau biarkan urutan array
+                            const sortedMessages = data.messages.sort((a, b) => {
+                                const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                                const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                                return timeA - timeB;
+                            });
+                            
+                            sortedMessages.forEach(renderMessage);
+                            scrollToBottom();
+                        } else if (data.messages && data.messages.length === 0) {
+                             // Kirim pesan awal jika array messages kosong
+                            sendInitialMessage();
+                        }
+                    } else {
+                        // Dokumen tidak ditemukan, reset chat ID dan minta nama lagi
+                        localStorage.removeItem('waroengMasherChatId');
+                        chatId = null;
+                        chatWindow.classList.remove('open');
+                        chatFab.style.display = 'flex';
+                        nameModalOverlay.classList.add('open');
                     }
+                }, (error) => {
+                    console.error("Error getting messages: ", error);
                 });
-
-                const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-                // Tampilkan data ke kontainer HTML
-                analysisContainer.innerHTML = `
-                    <h4 class="text-warning">💰 Analisis Keuangan Developer 📊</h4>
-                    <ul class="list-unstyled text-white">
-                        <li>Total Pendapatan: <strong>${formatRupiah(totalRevenue)}</strong></li>
-                        <li>Total Pesanan: <strong>${totalOrders}</strong></li>
-                        <li>Total Item Terjual: <strong>${totalItemsSold}</strong></li>
-                        <li>Rata-rata Nilai Pesanan: <strong>${formatRupiah(avgOrderValue)}</strong></li>
-                    </ul>
-                    <p class="text-warning small">*Data dihitung real-time dari koleksi 'orders' Firebase.</p>
-                `;
-
-            } catch (error) {
-                console.error("Gagal memuat Analisis Keuangan:", error);
-                analysisContainer.innerHTML = `<p class="text-danger">Error memuat data: ${error.message}. Periksa koneksi Firebase dan Security Rules.</p>`;
-            }
         }
 
 
-        // --- INISIALISASI UTAMA ---
+        // --- INIT SAAT HALAMAN DIMUAT ---
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts();
-            renderCart();
-            updateCartBadge();
-            loadFinancialAnalysis(); // Muat Analisis Keuangan (jika Developer Mode ON)
+            updateCartUI();
+            
+            // --- Tambahan: Animasi bounce saat FAB muncul pertama kali ---
+            const chatFab = document.getElementById('chat-fab-button');
+            chatFab.classList.add('animate-bounce');
+            setTimeout(() => chatFab.classList.remove('animate-bounce'), 1000); 
+            // --- Akhir Tambahan ---
+
+            // Atur nama modal agar selalu di atas saat halaman dimuat jika nama belum diset
+            if (!visitorName || visitorName === 'Pelanggan') {
+                nameModalOverlay.style.zIndex = '2002'; // Naikkan z-index
+                // nameModalOverlay.classList.add('open'); // Tidak langsung dibuka, hanya saat klik FAB
+            }
+            
+            // Jika chat ID sudah ada, coba muat pesan segera setelah DOMContentLoaded
+            if (chatId) {
+                // Tidak perlu memanggil loadMessages di sini, biarkan dipanggil saat chatWindow dibuka
+            }
         });
     </script>
 </body>
