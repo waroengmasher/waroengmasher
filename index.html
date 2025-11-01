@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAROENG MASHER - Katalog Lengkap</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* GAYA BARU COFFEE SHOP: Modern, Dark, Elegant */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #1A1A1A; /* Latar belakang sangat gelap */
+            scroll-behavior: smooth; 
+            color: #E0E0E0; /* Warna teks umum lebih terang untuk kontras */
+        }
+        h1, h2, h3, h4, h5, h6, .navbar-brand { 
+            font-family: 'Lora', serif; 
+            font-weight: 700; 
+            color: #FFFFFF; /* Judul putih bersih */
+        }
+        .navbar-brand { 
+            font-weight: bold; 
+            color: #FFD700 !important; /* Brand dengan warna emas/kuning cerah */
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        .navbar {
+            background-color: #282828 !important; /* Navbar gelap */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-link { 
+            font-weight: 500; 
+            color: #E0E0E0 !important; /* Nav link terang */
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active { 
+            color: #FFD700 !important; /* Hover dan aktif dengan warna emas */
+            font-weight: bold; 
+        }
+        .cart-icon { 
+            font-size: 1.8rem; /* Icon keranjang lebih besar */
+            cursor: pointer; 
+            position: relative; 
+            color: #E0E0E0;
+            transition: color 0.3s ease;
+        }
+        .cart-icon:hover {
+            color: #FFD700;
+        }
+        .cart-badge { 
+            position: absolute; 
+            top: -8px; 
+            right: -10px; 
+            font-size: 0.75rem; 
+            width: 22px; 
+            height: 22px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #E63946 !important; /* Badge merah menonjol */
+            color: white !important;
+        }
+        .section-divider { 
+            border-top: 2px dashed rgba(255, 255, 255, 0.2); /* Garis putus-putus, lebih halus */
+            margin: 100px auto; /* Jarak lebih luas */
+            width: 70%; 
+            box-shadow: none; /* Hilangkan bayangan */
+        }
+        .hero-section { 
+            height: 80vh; /* Lebih tinggi */
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2070&auto=format&fit=crop') no-repeat center center; 
+            background-size: cover; 
+            background-attachment: fixed; 
+            color: white; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* Tambah bayangan teks agar jelas */
+        }
+        .hero-section h1 { 
+            font-size: 4.5rem; /* Judul lebih besar */
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .hero-section p.lead {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #F0F0F0;
+        }
+        .btn-primary { 
+            background-color: #FFD700; /* Tombol utama warna emas */
+            border-color: #FFD700; 
+            color: #1A1A1A; /* Teks gelap di tombol emas */
+            padding: 15px 40px; /* Padding lebih besar */
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            border-radius: 50px; /* Tombol bulat */
+            transition: all 0.3s ease; 
+        }
+        .btn-primary:hover { 
+            background-color: #E0B400; /* Emas sedikit lebih gelap saat hover */
+            border-color: #E0B400; 
+            transform: translateY(-3px); /* Efek melayang */
+            box-shadow: 0 8px 15px rgba(255, 215, 0, 0.3);
+        }
+        .btn-outline-primary { 
+            color: #FFD700; /* Garis tepi emas */
+            border-color: #FFD700; 
+            font-weight: 500; 
+            border-radius: 5px; /* Sedikit melengkung */
+            transition: all 0.3s ease; 
+        }
+        .btn-outline-primary:hover { 
+            background-color: #FFD700; 
+            color: #1A1A1A; /* Teks gelap saat hover */
+        }
+        .btn-success { /* Tombol Checkout/Konfirmasi */
+            background-color: #4CAF50; 
+            border-color: #4CAF50;
+            color: white;
+            padding: 12px 30px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: background-color 0.3s;
+        }
+        .btn-success:hover {
+            background-color: #388E3C;
+            border-color: #388E3C;
+        }
+
+        /* --- GAYA PRODUK ALA COFFEE SHOP BARU (Minimalis Dark) --- */
+        .product-card { 
+            border: none; /* Hapus border */
+            background-color: #282828; /* Card background abu gelap */
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            border-radius: 10px; /* Sudut lebih melengkung */
+            overflow: hidden; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Bayangan halus */
+            display: flex; 
+            flex-direction: column; 
+            color: #E0E0E0;
+        }
+        .product-card:hover { 
+            transform: translateY(-5px); /* Efek melayang lebih dramatis */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6); 
+        }
+        .product-card .card-img-top { 
+            height: 250px; 
+            object-fit: cover; /* Gunakan cover untuk mengisi ruang, lalu pangkas */
+            padding: 0; /* Hapus padding gambar */
+            transition: transform 0.5s ease;
+            border-bottom: 2px solid #1A1A1A; /* Pemisah gambar hitam pekat */
+        }
+        .product-card:hover .card-img-top {
+            transform: scale(1.05); /* Zoom in gambar saat hover */
+        }
+        .product-card .card-body { 
+            text-align: center; 
+            padding: 1.5rem; /* Tambah padding */
+            min-height: 190px; 
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card .card-title { 
+            color: #FFD700; /* Judul produk emas */
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .product-card .card-text { 
+            font-size: 0.95rem; 
+            color: #B0B0B0; /* Deskripsi abu-abu lembut */
+            flex-grow: 1; 
+            margin-bottom: 1rem;
+        }
+        .product-card h6 { 
+            color: #FFFFFF; 
+            font-weight: bold; 
+            font-size: 1.5rem; /* Harga lebih besar */
+        }
+
+        /* Rak Produk (Minimalis, hanya garis tipis) */
+        .product-shelf {
+            position: relative;
+            padding-bottom: 5px; /* Kurangi ruang untuk rak */
+            margin-bottom: 80px; 
+        }
+        .product-shelf::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            right: 5%;
+            height: 2px; /* Tinggi rak sangat tipis */
+            background-color: #FFD700; /* Garis emas */
+            border-radius: 0;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* Efek glow emas */
+        }
+        .product-shelf .row {
+            align-items: stretch; 
+        }
+        /* Akhir Gaya Produk Baru */
+
+        /* Modal Styling */
+        .modal-content {
+            background-color: #282828; /* Modal gelap */
+            color: #E0E0E0;
+            border: 1px solid #FFD700; /* Border modal emas */
+        }
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .modal-title {
+            color: #FFD700;
+        }
+        .btn-close {
+            filter: invert(1); /* Tombol close putih */
+        }
+
+        /* Toast Styling */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 1056; display: flex; flex-direction: column; gap: 10px; }
+        .toast-custom { 
+            display: flex; align-items: center; padding: 15px; 
+            background-color: #333333; 
+            border: 1px solid #FFD700;
+            border-radius: 8px; box-shadow: 0 4px 12px rgba(255,215,0,0.15); min-width: 320px; 
+            opacity: 0; transform: translateX(100%); transition: all 0.4s ease-in-out; 
+        }
+        .toast-custom.show { opacity: 1; transform: translateX(0); }
+        .toast-custom img { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 15px; }
+        .toast-custom .toast-content { flex-grow: 1; }
+        .toast-custom .toast-content p { margin: 0; font-size: 0.9rem; color: #E0E0E0; }
+        .toast-custom .toast-content strong { color: #FFD700; }
+
+        /* Live Chat Styling */
+        .chat-fab { 
+            position: fixed; bottom: 25px; right: 25px; 
+            background-color: #FFD700; 
+            color: #1A1A1A; 
+            width: 60px; height: 60px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; font-size: 1.8rem; 
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4); 
+            cursor: pointer; z-index: 1050; transition: transform 0.3s ease-in-out; 
+        }
+        .chat-fab:hover { 
+            transform: scale(1.1); 
+            background-color: #E0B400; 
+        }
+        .chat-window { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: #1A1A1A; 
+            z-index: 2000; display: flex; flex-direction: column; 
+            transform: translateY(100%); transition: transform 0.4s ease-in-out; visibility: hidden; 
+        }
+        .chat-window.open { visibility: visible; transform: translateY(0); }
+        .chat-header { 
+            background-color: #FFD700; 
+            color: #1A1A1A; 
+            padding: 1rem; font-family: 'Lora', serif; font-size: 1.2rem; text-align: center; flex-shrink: 0; position: relative; 
+        }
+        #chat-close-btn { position: absolute; top: 50%; right: 1.5rem; transform: translateY(-50%); font-size: 1.5rem; cursor: pointer; color: #1A1A1A; opacity: 0.8; transition: opacity 0.2s; }
+        #chat-close-btn:hover { opacity: 1; }
+        .chat-messages { flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1A1A1A; }
+        
+        .message-content-wrapper { margin-bottom: 0.75rem; max-width: 80%; display: flex; flex-direction: column; }
+        .message-content-wrapper:has(.message.admin) { margin-right: auto; }
+        .message-content-wrapper:has(.message.user) { margin-left: auto; }
+        
+        .message { padding: 0.5rem 0.75rem; border-radius: 12px; line-height: 1.4; display: table; }
+        .message.user { 
+            background-color: #444444; 
+            color: #E0E0E0; 
+            margin-left: auto; border-bottom-right-radius: 0; 
+        }
+        .message.admin { 
+            background-color: #FFD700; 
+            color: #1A1A1A; 
+            margin-right: auto; border-bottom-left-radius: 0; font-weight: 500;
+        }
+        
+        .message-sender-name { font-size: 0.7rem; margin-bottom: 2px; }
+        .message.user .message-sender-name { align-self: flex-end; color: #B0B0B0; }
+        .message.admin .message-sender-name { align-self: flex-start; color: #1A1A1A; }
+
+        .chat-input { display: flex; padding: 0.75rem; border-top: 1px solid #333333; background-color: #282828; flex-shrink: 0; }
+        .chat-input input { 
+            flex-grow: 1; border: 1px solid #555555; border-radius: 20px; 
+            padding: 0.5rem 1rem; margin-right: 0.5rem; 
+            background-color: #333333; color: #E0E0E0;
+        }
+        .chat-input button { background-color: transparent; border: none; color: #FFD700; font-size: 1.5rem; }
+        
+        .name-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2001; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .name-modal-overlay.open { opacity: 1; visibility: visible; }
+        .name-modal-content { 
+            background: #282828; 
+            padding: 2rem; border-radius: 8px; text-align: center; width: 90%; 
+            max-width: 400px; 
+            border: 1px solid #FFD700;
+            color: #E0E0E0;
+        }
+        .name-modal-content h5 { font-family: 'Lora', serif; margin-bottom: 1rem; color: #FFD700; }
+        .name-modal-content p { margin-bottom: 1.5rem; }
+        .name-modal-content input { 
+            width: 100%; padding: 0.75rem; border-radius: 5px; 
+            border: 1px solid #555555; margin-bottom: 1.5rem; 
+            background: #333333; color: #FFFFFF;
+        }
+    
+        /* ===== CSS UNTUK MODAL PEMBAYARAN ===== */
+        #payment-details-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            max-width: 300px; 
+            border: 2px solid #FFD700;
+        }
+        #payment-details-content .bank-info {
+            background-color: #333333; 
+            border: 1px solid #555555;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: left;
+            color: #FFD700;
+        }
+        #payment-details-content .bank-info p {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        #payment-details-content h4 {
+            color: #FFFFFF;
+        }
+
+        /* Footer Styling */
+        footer { 
+            background-color: #282828; 
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            color: #B0B0B0;
+        } 
+
+        /* --- DEVELOPER MODE STYLING --- */
+        .developer-analysis-bg {
+            /* Menggunakan latar belakang gelap untuk membedakannya */
+            background-color: #343a40 !important; 
+            border-top: 5px solid #ffc107; /* Garis kuning sebagai penanda developer */
+            color: white;
+            box-shadow: 0 -4px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        #financial-analysis-section {
+            padding: 30px 0;
+        }
+
+        #financial-analysis-container h4 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px dashed #6c757d;
+            padding-bottom: 5px;
+        }
+
+        #financial-analysis-container ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        #financial-analysis-container li {
+            padding: 5px 0;
+            font-size: 1.1rem;
+        }
+        /* --- AKHIR DEVELOPER MODE STYLING --- */
+
+        /* --- ANIMASI LUCU --- */
+
+        /* Animasi Pop untuk Tombol */
+        @keyframes buttonPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-primary.animate-pop,
+        .btn-outline-primary.animate-pop,
+        .btn-success.animate-pop {
+            animation: buttonPop 0.2s ease-out;
+        }
+
+        /* Animasi Goyang untuk Keranjang */
+        @keyframes shakeCart {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .cart-icon.animate-shake {
+            animation: shakeCart 0.5s ease-in-out;
+        }
+
+        /* Animasi Bounce untuk Chat FAB */
+        @keyframes bounceFab {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .chat-fab.animate-bounce {
+            animation: bounceFab 1s ease-in-out;
+        }
+        .chat-fab {
+            transition: transform 0.3s ease-in-out; /* Tambahkan transisi di sini */
+        }
+        .chat-fab:hover {
+            transform: translateY(-5px); /* Sedikit naik saat hover */
+        }
+
+        /* Animasi modal pembayaran */
+        .modal.fade .modal-dialog {
+            transform: translate(0, -50px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal.show .modal-dialog {
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+
+        /* Animasi nama modal */
+        .name-modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .name-modal-overlay.open .name-modal-content {
+            animation: slideInFromTop 0.4s ease-out forwards;
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Animasi untuk pesan chat yang baru datang */
+        .message-content-wrapper {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInSlideUp 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeInSlideUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#homepage">☕ WAROENG MASHER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#homepage">BERANDA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#shop">MENU</a></li>
+                    <li class="nav-item ms-3">
+                        <div class="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            <i class="bi bi-bag-heart-fill"></i>
+                            <span class="badge rounded-pill bg-danger cart-badge d-none">0</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main id="homepage">
+        <header class="hero-section text-white text-center d-flex align-items-center justify-content-center">
+            <div class="container">
+                <h1 class="display-4">Setiap Tegukan, Menceritakan Hal Seru</h1>
+                <p class="lead">Rasakan kopi yang beda dari yang lain, diracik dengan passion dan hati.</p>
+                <a href="#shop" class="btn btn-primary btn-lg mt-3">Jelajahi Menu</a>
+            </div>
+        </header>
+    </main>
+
+    <div class="section-divider"></div>
+
+        <main id="shop" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 mt-3 display-5">MENU SPESIAL WAROENG MASHER</h2>
+
+        <h3 class="text-center mb-4 pt-3 text-white">☕ Kopi dan Minuman Pilihan</h3>
+        <div class="product-shelf">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="drink-list-container">
+                </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3 class="text-center mb-4 pt-3 text-white">🍽️ Makanan dan Camilan</h3>
+        <div class="product-shelf">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="food-list-container">
+                </div>
+        </div>
+    </div>
+</main>
+
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">🛒 Keranjang Belanja Anda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cart-items-container">
+                        <p class="text-center text-muted">Keranjang Anda masih kosong.</p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <h6 class="mb-3 text-white">Pilih Metode Pembayaran:</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payQRIS" value="QRIS" checked>
+                            <label class="form-check-label" for="payQRIS">
+                                💳 QRIS
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payTransfer" value="Transfer Bank">
+                            <label class="form-check-label" for="payTransfer">
+                                🏦 Transfer Bank
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payCash" value="Bayar di Kasir">
+                            <label class="form-check-label" for="payCash">
+                                💵 Bayar di Kasir (Cash)
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <h4 class="text-white">Total: <span id="cart-total" class="fw-bold text-success">Rp 0</span></h4>
+                    <button type="button" class="btn btn-success" id="checkout-whatsapp-btn" disabled>
+                        <i class="bi bi-wallet-fill"></i> Lanjutkan Pembayaran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Selesaikan Pembayaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="payment-details-content"></div>
+                    
+                    <hr class="text-muted">
+                    <p class="text-muted small">Setelah melakukan pembayaran/pemesanan, silakan klik tombol di bawah untuk mengirimkan bukti pesanan ke admin.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success w-100" id="confirm-payment-wa-btn">
+                        <i class="bi bi-whatsapp"></i> Konfirmasi Pesanan ke Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <div id="product-details-container"></div> 
+
+    <section id="financial-analysis-section" class="p-4 mt-5 developer-analysis-bg" style="display: none;">
+        <div class="container">
+            <div id="financial-analysis-container">
+                <h4 class="text-warning">💰 Analisis Keuangan Developer 📊 (Loading...)</h4>
+                <p class="text-light">Menghubungkan ke data pesanan...</p>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 WAROENG MASHER | Dibuat dengan Passion dan Kopi</p>
+        </div>
+    </footer>
+
+    <div class="name-modal-overlay" id="name-modal">
+        <div class="name-modal-content">
+            <h5>Selamat Datang!</h5>
+            <p>Silakan masukkan nama Anda untuk memulai percakapan.</p>
+            <form id="name-form">
+                <input type="text" id="visitor-name-input" placeholder="Nama Anda..." required>
+                <button type="submit" class="btn btn-primary">Mulai Chat</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="chat-fab" id="chat-fab-button">
+        <i class="bi bi-chat-dots-fill"></i>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            Butuh Bantuan? Chat Kami!
+            <i class="bi bi-x-lg" id="chat-close-btn"></i>
+        </div>
+        <div class="chat-messages" id="chat-messages-container"></div>
+        <form class="chat-input" id="chat-form">
+            <input type="text" id="chat-message-input" placeholder="Ketik pesan Anda..." autocomplete="off">
+            <button type="submit"><i class="bi bi-send-fill"></i></button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- INISIALISASI FIREBASE ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBhRCNri0TjBdMx9fEN8jgAfDD-jV_FdNo",
+  authDomain: "waroengmasher.firebaseapp.com",
+  projectId: "waroengmasher",
+  storageBucket: "waroengmasher.firebasestorage.app",
+  messagingSenderId: "984134106741",
+  appId: "1:984134106741:web:81d129033d09475173c23c",
+  measurementId: "G-7RRW43T1LT"
+};
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --------------------------------------------------------------------
+        // 🔒 PENGATURAN MODE PENGEMBANG (DEVELOPER MODE)
+        // GANTI ini menjadi 'true' agar elemen Analisis Keuangan muncul.
+        const IS_DEVELOPER_MODE = true; // <-- UBAH KE TRUE UNTUK MELIHAT DATA ANALISIS
+        // --------------------------------------------------------------------
+        
+        // --- DATA PRODUK ---
+        const products = [
+            { id: 'INDONESIANO HOT', name: 'INDONESIANO HOT', price: 10000, image: 'sasya.jpg', description: 'Kopi hitam klasik Indonesia disajikan hangat dengan rasa otentik.', category: 'minuman' },
+            { id: 'LONGBLACK HOT', name: 'LONGBLACK HOT', price: 10000, image: 'sasya.jpg ', description: 'Espresso ganda yang diekstraksi ke dalam air panas, kuat dan menyegarkan.', category: 'minuman' },
+            { id: 'SANGER HOT', name: 'SANGER HOT', price: 12000, image: 'a.jpg', description: 'Kopi kental dicampur dengan sedikit susu kental manis, rasa manis yang pas.', category: 'minuman' },
+            { id: 'FILTER COFFE HOT', name: 'FILTER KOPI HOT', price: 10000, image: '3.jpg', description: 'Kopi yang diseduh dengan metode filter, menonjolkan karakter biji kopi.', category: 'minuman' },
+            { id: 'INDOSIANO ICED--', name: ' INDONESIANO ICED', price: 12000, image: 'americano.jpg', description: 'Kopi Indonesia disajikan dingin, segar dan penuh semangat.', category: 'minuman' },
+            { id: 'LONG BLACK ICED', name: 'LONG BLACK ICED', price: 12000, image: 'americano.jpg', description: 'Long Black dingin, pendamping sempurna di hari yang panas.', category: 'minuman' },
+            { id: 'SANGER ICED', name: 'SANGER ICED', price: 15000, image: 'b.jpg', description: 'Sanger dingin yang creamy, minuman kopi favorit untuk penyuka rasa manis.', category: 'minuman' },
+            { id: 'FILTER ICED', name: 'FILTER ICED', price: 12000, image: '4.jpg', description: 'Filter Kopi disajikan dingin, lebih lembut dan mudah dinikmati.', category: 'minuman' },
+            { id: 'ESPRESSO', name: 'ESPRESSO', price: 8000, image: '6.jpg', description: 'kopi yang memiliki rasa yang sangat stroong.', category: 'minuman' },
+            { id: 'KOPI SUSU GULA AREN ICED', name: 'KOPI SUSU GULA AREN ICED', price: 10000, image: '5.jpg', description: 'Kopi susu gula aren Kdisajikan dingin, minuman kekinian yang populer.', category: 'minuman' },
+            { id: 'TEH HIJAU HOT&COLD', name: 'TEH HIJAU HOT&COLD', price: 5000, image: '8.jpg', description: 'Teh hijau kaya antioksidan, bisa disajikan panas atau dingin.', category: 'minuman' },
+            { id: 'TEH MANIS HOT&COLD', name: 'TEH MANIS HOT&COLD', price: 5000, image: '7.jpg', description: 'Teh diseduh manis dan disajikan dingin, klasik dan melegakan dahaga.', category: 'minuman' },
+            { id: 'WEDANG JAHE HOT ', name: 'WEDANG JAHE HOT', price: 10000, image: '9.jpg', description: 'Minuman jahe hangat yang menenangkan, cocok untuk cuaca dingin.', category: 'minuman' },
+            { id: 'MILO COLD&HOT', name: 'MILO COLD&HOT', price: 10000, image: '10.jpg', description: 'Minuman cokelat malt favorit, bisa disajikan dingin atau hangat.', category: 'minuman' },
+            { id: 'KENTANG GORENG', name: 'KENTANG GORENG', price: 10000, image: '11.jpg', description: 'Kentang goreng renyah disajikan dengan saus pilihan.', category: 'makanan' },
+            { id: 'ROTI BAKAR', name: 'ROTI BAKAR', price: 7000, image: '12.jpg', description: 'Roti bakar dengan berbagai topping manis.', category: 'makanan' },
+            { id: 'AYAM PENYET', name: 'AYAM PENYET', price: 10000, image: '13.jpg', description: 'Ayam goreng dengan sambal penyet pedas, disajikan dengan nasi hangat.', category: 'makanan' },
+            { id: 'BAKARAN', name: 'ANEKA BAKARAN', price: 1000, image: '17.jpg', description: 'Pilihan sate-satean bakar (per tusuk) dengan bumbu spesial.', category: 'makanan' },
+            { id: 'UBI GORENG', name: 'UBI GORENG', price: 10000, image: '15.jpg', description: 'Ubi manis digoreng renyah, camilan tradisional yang lezat.', category: 'makanan' },
+            { id: 'AYAM PENYET SAMBEL IJO', name: 'AYAM PENYET SAMBEL IJO', price: 10000, image: '14.jpg', description: 'Ayam goreng dengan sambal hijau pedas yang khas.', category: 'makanan' }
+        ];
+
+        // --- LOGIKA KERANJANG BELANJA ---
+        
+        let cart = JSON.parse(localStorage.getItem('waroengMasherCart')) || [];
+        const cartBadge = document.querySelector('.cart-badge');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartTotalElement = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkout-whatsapp-btn');
+        const WA_NUMBER = '6289524627653'; 
+
+        function saveCart() {
+            localStorage.setItem('waroengMasherCart', JSON.stringify(cart));
+        }
+
+        function calculateTotal() {
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            if (totalItems > 0) {
+                cartBadge.classList.remove('d-none');
+                checkoutBtn.disabled = false;
+            } else {
+                cartBadge.classList.add('d-none');
+                checkoutBtn.disabled = true;
+            }
+        }
+        
+        function showToast(productName) {
+            const container = document.getElementById('toast-container');
+            const product = products.find(p => p.name === productName);
+            if (!product) return;
+            const toast = document.createElement('div');
+            toast.classList.add('toast-custom');
+            toast.innerHTML = `
+                <img src="${product.image}" alt="${productName}">
+                <div class="toast-content">
+                    <strong>Berhasil Ditambahkan!</strong>
+                    <p>${productName} telah ditambahkan ke keranjang.</p>
+                </div>
+            `;
+            container.prepend(toast); 
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500); 
+            }, 3000); 
+        }
+
+        function addToCart(productId) {
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image });
+            }
+            saveCart();
+            updateCartBadge();
+            renderCart();
+            showToast(product.name);
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+        
+        function updateQuantity(productId, change) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += change;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1); // Hapus jika kuantitas 0
+                }
+                saveCart();
+                renderCart();
+                updateCartBadge();
+            }
+        }
+        
+        function renderCart() {
+            cartItemsContainer.innerHTML = '';
+            let total = calculateTotal();
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-muted">Keranjang Anda masih kosong.</p>';
+                cartTotalElement.textContent = formatRupiah(0);
+                return;
+            }
+
+            cart.forEach(item => {
+                const itemHtml = `
+                    <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
+                        <img src="${item.image}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0 text-white">${item.name}</h6>
+                            <small class="text-muted">${formatRupiah(item.price)}</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-danger me-2" onclick="updateQuantity('${item.id}', -1)">-</button>
+                            <span class="text-white fw-bold me-2">${item.quantity}</span>
+                            <button class="btn btn-sm btn-outline-success" onclick="updateQuantity('${item.id}', 1)">+</button>
+                        </div>
+                        <span class="ms-4 fw-bold text-white" style="min-width: 80px; text-align: right;">${formatRupiah(item.price * item.quantity)}</span>
+                    </div>
+                `;
+                cartItemsContainer.innerHTML += itemHtml;
+            });
+
+            cartTotalElement.textContent = formatRupiah(total);
+        }
+
+        // --- LOGIKA TAMPILAN PRODUK ---
+
+        function renderProducts() {
+            const drinkContainer = document.getElementById('drink-list-container');
+            const foodContainer = document.getElementById('food-list-container');
+            drinkContainer.innerHTML = '';
+            foodContainer.innerHTML = '';
+
+            products.forEach(product => {
+                const cardHtml = `
+                    <div class="col">
+                        <div class="card product-card h-100">
+                            <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${product.name}</h5>
+                                <p class="card-text">${product.description}</p>
+                                <h6>${formatRupiah(product.price)}</h6>
+                                <button class="btn btn-outline-primary w-100 mt-2" onclick="addToCart('${product.id}')">
+                                    <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                if (product.category === 'minuman') {
+                    drinkContainer.innerHTML += cardHtml;
+                } else if (product.category === 'makanan') {
+                    foodContainer.innerHTML += cardHtml;
+                }
+            });
+        }
+        
+        // --- LOGIKA CHECKOUT DAN WHATSAPP ---
+
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        const paymentDetailsContent = document.getElementById('payment-details-content');
+        const confirmPaymentWABtn = document.getElementById('confirm-payment-wa-btn');
+
+        checkoutBtn.addEventListener('click', () => {
+            const total = calculateTotal();
+            if (total === 0) return;
+
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let paymentDetailsHtml = '';
+            let waMessage = `Halo Admin Waroeng Masher, saya ingin memesan menu ini:\n\n`;
+
+            cart.forEach(item => {
+                waMessage += `${item.quantity}x ${item.name} (${formatRupiah(item.price * item.quantity)})\n`;
+            });
+
+            waMessage += `\nTotal Belanja: ${formatRupiah(total)}\nMetode Pembayaran: *${selectedMethod}*\n\n`;
+            waMessage += 'Mohon diproses segera. Terima kasih!';
+            
+            confirmPaymentWABtn.onclick = async () => {
+                // Simpan pesanan ke Firebase sebelum kirim WA
+                try {
+                    await db.collection('orders').add({
+                        items: cart,
+                        total: total,
+                        method: selectedMethod,
+                        date: new Date().toISOString(),
+                        status: 'Pending'
+                    });
+                    console.log("Pesanan berhasil disimpan di Firebase.");
+                } catch (e) {
+                    console.error("Error menambahkan dokumen order: ", e);
+                }
+
+                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMessage)}`, '_blank');
+                
+                // Kosongkan keranjang setelah konfirmasi dikirim
+                cart = [];
+                saveCart();
+                renderCart();
+                updateCartBadge();
+                paymentModal.hide();
+            };
+
+            // Menampilkan detail pembayaran di modal
+            if (selectedMethod === 'QRIS') {
+                paymentDetailsHtml = `
+                    <img src="qris.png" alt="QRIS Code" class="img-fluid">
+                    <p class="text-white">Scan QR Code di atas untuk pembayaran.</p>
+                    <div class="bank-info mt-3">
+                        <p>Total Bayar: <strong>${formatRupiah(total)}</strong></p>
+                        <p class="small">Pastikan jumlah yang ditransfer sesuai.</p>
+                    </div>
+                `;
+            } else if (selectedMethod === 'Transfer Bank') {
+                paymentDetailsHtml = `
+                    <h4>Transfer Bank</h4>
+                    <div class="bank-info mt-3">
+                        <p>Bank Tujuan: <strong>BCA</strong></p>
+                        <p>No. Rekening: <strong>1234567890</strong></p>
+                        <p>Atas Nama: <strong>Admin Waroeng Masher</strong></p>
+                        <p>Total Bayar: <strong>${formatRupiah(total)}</strong></p>
+                    </div>
+                    <p class="text-white mt-3">Setelah transfer, kirim bukti bayar melalui WhatsApp.</p>
+                `;
+            } else if (selectedMethod === 'Bayar di Kasir') {
+                paymentDetailsHtml = `
+                    <h4>Bayar di Kasir</h4>
+                    <p class="text-white">Anda akan membayar secara tunai (cash) di kasir kami saat mengambil pesanan.</p>
+                    <div class="bank-info mt-3">
+                        <p>Total Tagihan: <strong>${formatRupiah(total)}</strong></p>
+                    </div>
+                `;
+            }
+
+            paymentDetailsContent.innerHTML = paymentDetailsHtml;
+            // Tutup Cart Modal sebelum membuka Payment Modal
+            const cartModalEl = document.getElementById('cartModal');
+            const cartModal = bootstrap.Modal.getInstance(cartModalEl);
+            if (cartModal) cartModal.hide();
+            
+            paymentModal.show();
+        });
+
+
+        // --- LOGIKA CHAT LIVE & BALASAN OTOMATIS ---
+
+        let visitorName = localStorage.getItem('visitorName');
+        const chatFab = document.getElementById('chat-fab-button');
+        const chatWindow = document.getElementById('chat-window');
+        const chatCloseBtn = document.getElementById('chat-close-btn');
+        const nameModalOverlay = document.getElementById('name-modal');
+        const nameForm = document.getElementById('name-form');
+        const visitorNameInput = document.getElementById('visitor-name-input');
+        const chatMessagesContainer = document.getElementById('chat-messages-container');
+        const chatForm = document.getElementById('chat-form');
+        const chatMessageInput = document.getElementById('chat-message-input');
+
+        // Balasan Otomatis
+        const autoResponses = [
+            { trigger: 'halo', response: 'Halo! Ada yang bisa saya bantu di Waroeng Masher hari ini? Silakan ketik *menu* untuk melihat opsi utama.' },
+            { trigger: 'menu', response: 'Tentu, ini menu utama kami: 1. *Minuman* (Kopi/Teh), 2. *Makanan* (Camilan/Nasi). Anda tertarik yang mana? Atau, lihat menu lengkap di website!' },
+            { trigger: 'alamat', response: 'Kami berlokasi di Jl. Kopi Nikmat No. 12, dekat perempatan. Anda bisa mencari "Waroeng Masher" di Google Maps!' },
+            { trigger: 'terima kasih', response: 'Sama-sama! Senang bisa membantu. Selamat menikmati hari Anda!' },
+            { trigger: 'jam buka', response: 'Kami buka setiap hari mulai pukul 10:00 pagi hingga 11:00 malam.' },
+            { trigger: 'promo', response: 'Saat ini kami memiliki promo Beli 2 Kopi Gratis 1 Roti Bakar. Cepat pesan sekarang!' },
+        ];
+        const defaultResponse = "Maaf, saya adalah Balasan Otomatis. Mohon ketik *menu* atau *alamat*. Jika Anda perlu bantuan lebih lanjut, admin kami akan segera merespon.";
+
+        function formatMessage(sender, message) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('message-content-wrapper');
+            
+            const nameElement = document.createElement('div');
+            nameElement.classList.add('message-sender-name');
+            nameElement.textContent = sender === 'user' ? (visitorName || 'Anda') : 'Admin';
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.textContent = message;
+
+            if (sender === 'user') {
+                 wrapper.style.marginLeft = 'auto'; 
+                 wrapper.style.marginRight = '0';
+            } else {
+                 wrapper.style.marginLeft = '0'; 
+                 wrapper.style.marginRight = 'auto';
+            }
+            
+            wrapper.appendChild(nameElement);
+            wrapper.appendChild(messageElement);
+            chatMessagesContainer.appendChild(wrapper);
+
+            // Scroll ke bawah
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        function handleAutoResponse(userMessage) {
+            const lowerCaseMessage = userMessage.toLowerCase().trim();
+            
+            // Cari balasan otomatis
+            const foundResponse = autoResponses.find(res => lowerCaseMessage.includes(res.trigger));
+            const responseText = foundResponse ? foundResponse.response : defaultResponse;
+
+            // Beri jeda simulasi Admin mengetik
+            setTimeout(() => {
+                formatMessage('admin', responseText);
+            }, 1000); 
+        }
+
+
+        // Event Listener untuk tombol FAB
+        chatFab.addEventListener('click', () => {
+            if (!visitorName) {
+                // Tampilkan modal nama jika belum ada nama
+                nameModalOverlay.classList.add('open');
+            } else {
+                // Buka jendela chat jika sudah ada nama
+                chatWindow.classList.add('open');
+                chatFab.style.display = 'none';
+                
+                // Kirim pesan selamat datang pertama kali (jika belum pernah)
+                if (chatMessagesContainer.children.length === 0) {
+                     formatMessage('admin', `Selamat datang, ${visitorName}! Ada yang bisa dibantu? Silakan ketik *menu* atau *alamat*.`);
+                }
+            }
+        });
+
+        // Event Listener untuk form input nama
+        nameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            visitorName = visitorNameInput.value.trim();
+            if (visitorName) {
+                localStorage.setItem('visitorName', visitorName);
+                nameModalOverlay.classList.remove('open');
+                chatWindow.classList.add('open');
+                chatFab.style.display = 'none';
+                
+                // Kirim pesan selamat datang pertama kali
+                formatMessage('admin', `Selamat datang, ${visitorName}! Ada yang bisa dibantu? Silakan ketik *menu* atau *alamat*.`);
+            }
+        });
+
+        // Event Listener untuk tombol tutup chat
+        chatCloseBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+            chatFab.style.display = 'flex';
+        });
+
+        // Event Listener untuk form input pesan
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = chatMessageInput.value.trim();
+
+            if (message) {
+                formatMessage('user', message);
+                handleAutoResponse(message);
+                chatMessageInput.value = '';
+            }
+        });
+
+        // --- FUNGSI ANALISIS KEUANGAN DEVELOPER ---
+
+        async function loadFinancialAnalysis() {
+            const analysisSection = document.getElementById('financial-analysis-section');
+            const analysisContainer = document.getElementById('financial-analysis-container');
+            
+            if (!IS_DEVELOPER_MODE) {
+                // Pastikan section tersembunyi jika mode off
+                analysisSection.style.display = 'none';
+                return;
+            }
+            
+            // Tampilkan section jika Developer Mode ON
+            analysisSection.style.display = 'block'; 
+
+            try {
+                const ordersRef = db.collection('orders');
+                const snapshot = await ordersRef.get();
+                
+                let totalRevenue = 0;
+                let totalOrders = 0;
+                let totalItemsSold = 0;
+                
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    // Pastikan total adalah angka
+                    totalRevenue += (typeof order.total === 'number' ? order.total : 0);
+                    totalOrders++;
+                    
+                    // Hitung total item terjual dari detail keranjang (items array)
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach(item => {
+                            totalItemsSold += (typeof item.quantity === 'number' ? item.quantity : 0);
+                        });
+                    }
+                });
+
+                const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+                // Tampilkan data ke kontainer HTML
+                analysisContainer.innerHTML = `
+                    <h4 class="text-warning">💰 Analisis Keuangan Developer 📊</h4>
+                    <ul class="list-unstyled text-white">
+                        <li>Total Pendapatan: <strong>${formatRupiah(totalRevenue)}</strong></li>
+                        <li>Total Pesanan: <strong>${totalOrders}</strong></li>
+                        <li>Total Item Terjual: <strong>${totalItemsSold}</strong></li>
+                        <li>Rata-rata Nilai Pesanan: <strong>${formatRupiah(avgOrderValue)}</strong></li>
+                    </ul>
+                    <p class="text-warning small">*Data dihitung real-time dari koleksi 'orders' Firebase.</p>
+                `;
+
+            } catch (error) {
+                console.error("Gagal memuat Analisis Keuangan:", error);
+                analysisContainer.innerHTML = `<p class="text-danger">Error memuat data: ${error.message}. Periksa koneksi Firebase dan Security Rules.</p>`;
+            }
+        }
+
+
+        // --- INISIALISASI UTAMA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderCart();
+            updateCartBadge();
+            loadFinancialAnalysis(); // Muat Analisis Keuangan (jika Developer Mode ON)
+        });
+    </script>
+</body>
+</html>
